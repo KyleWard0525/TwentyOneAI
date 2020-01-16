@@ -28,6 +28,7 @@ public class Card {
     protected int width = 120;
     protected int height = 150;
     private String name;
+    public int count;
     
     
     public Card (Suit s, Rank r)
@@ -44,42 +45,55 @@ public class Card {
             
             case ACE:
                 this.value = 11;
+                this.count = -1;
                 break;
             case TWO:
                 this.value = 2;
+                this.count = 1;
                 break;
             case THREE:
                 this.value = 3;
+                this.count = 1;
                 break;  
             case FOUR:
                 this.value = 4;
+                this.count = 1;
                 break;
             case FIVE:
                 this.value = 5;
+                this.count = 1;
                 break;
             case SIX:
                 this.value = 6;
+                this.count = 1;
                 break;
             case SEVEN:
                 this.value = 7;
+                this.count = 0;
                 break;
             case EIGHT:
                 this.value = 8;
+                this.count = 0;
                 break;
             case NINE:
                 this.value = 9;
+                this.count = 0;
                 break;
             case TEN:
                 this.value = 10;
+                this.count = -1;
                 break;
             case JACK:
                 this.value = 10;
+                this.count = -1;
                 break;
             case QUEEN:
                 this.value = 10;
+                this.count = -1;
                 break;
             case KING:
                 this.value = 10;
+                this.count = -1;
                 break;
         }
     }
