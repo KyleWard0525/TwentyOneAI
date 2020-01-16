@@ -23,6 +23,7 @@ public class Player {
     private boolean stand;
     public Card cardShowing;
     public boolean bust;
+    private int wins;
     
     public Player()
     {
@@ -132,5 +133,17 @@ public class Player {
     public void setStand(boolean stand) {
         this.stand = stand;
     }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
     
+    public void addWin()
+    {
+        wins++;
+    }
 }
