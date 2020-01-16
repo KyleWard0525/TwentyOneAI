@@ -20,6 +20,7 @@ public class Deck {
     protected final int SIZE = 52;
     private ArrayList<Card> cards;
     private ArrayList<Card> pulledCards;
+    protected int runningCount;
     
     public Deck()
     {
@@ -33,6 +34,7 @@ public class Deck {
     {
         cards = new ArrayList<>(SIZE);
         pulledCards = new ArrayList<>(SIZE);
+        runningCount = 0;
         buildDeck();
         shuffle();
     }
@@ -84,9 +86,18 @@ public class Deck {
         }
         
         Card pulled = cards.get(0);
+        
+        //Update count
+        runningCount += pulled.count;
+        
         pulledCards.add(pulled);
         cards.remove(0);
         return pulled;
+    }
+    
+    public int cardsLeft()
+    {
+        return cards.size();
     }
     
 }
