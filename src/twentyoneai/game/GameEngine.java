@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -31,6 +32,7 @@ import twentyoneai.GameWindow;
 public class GameEngine {
 
     public static Deck deck;
+    private ArrayList<Deck> allDecks = new ArrayList<>(10);
     public Dealer dealer;
     public Player player;
     private GameWindow gw;
@@ -41,6 +43,10 @@ public class GameEngine {
     private int startX;
     private int cardSpacing;
     private JPanel GamePanel;
+    protected int trueCount;
+    protected int runningCount;
+    private int currDeck;
+    public int totalGames = 1;
 
     public GameEngine(GameWindow gw) {
 
@@ -60,14 +66,19 @@ public class GameEngine {
      * Initialize variables
      */
     private void init() {
-        deck = new Deck();
         dealer = new Dealer();
         player = new Player();
+        currDeck = 0;
+        this.allDecks = new ArrayList<Deck>(10);
+        
+        deck = new Deck();
+        
         this.dealerY = 0;
         this.playerY = GamePanel.getHeight() - 150;
         this.startX = GamePanel.getWidth() / 7;
         this.cardSpacing = 125;
         this.GamePanel.setBackground(new Color(0, 102, 0));
+        this.trueCount = 0;
     }
 
     public void deal() {
@@ -90,8 +101,7 @@ public class GameEngine {
         GamePanel.revalidate();
         GamePanel.repaint();
         
-        timer.start();
-        
+        timer.start();   
     }
 
     public void drawCard(Card c) {
@@ -139,10 +149,14 @@ public class GameEngine {
             System.out.println("Error: Card not found.");
         }
 
+        //Set count
+        this.runningCount = deck.runningCount;
         
         GamePanel.add(cardPanel);
         GamePanel.repaint();
     }
+    
+    
 
     public void setGw(GameWindow gw) {
         this.gw = gw;
@@ -186,20 +200,22 @@ public class GameEngine {
         //Determine winner
         if(player.bust)
         {
-            System.out.println("Dealer wins via bust!\n");
+            System.out.println("Dealer wins via bust!");
         }
         else if(dealer.bust)
         {
-            System.out.println("Player wins via bust!\n");
+            System.out.println("Player wins via bust!");
+            player.addWin();
         }
         else{
             if(dealer.getScore() > player.getScore())
             {
-                System.out.println("Dealer wins with higher score!\n");
+                System.out.println("Dealer wins with higher score!");
             }
             else if(player.getScore() > dealer.getScore())
             {
-                System.out.println("Player wins with higher score!\n");
+                System.out.println("Player wins with higher score!");
+                player.addWin();
             }
             
             else if((player.getScore() == dealer.getScore()) && (player.isStand() && dealer.isStand()))
@@ -208,6 +224,8 @@ public class GameEngine {
             }
             
         }
+        System.out.println("Player wins: " + player.getWins());
+        System.out.println("Games played: " + totalGames + "\n");
         
         //Clear players' hands
         player.getHand().clear();
@@ -254,12 +272,38 @@ public class GameEngine {
             dealerPlay();
         }
     }
+    
+    public void checkDeck()
+    {
+        if(deck.cardsLeft() < 2)
+        {
+            allDecks.remove(currDeck);
+            currDeck += 1;
+            deck = allDecks.get(currDeck);
+        }
+    }
+    
+    public void computeTrueCount()
+    {
+        if(runningCount > 0) {
+        trueCount = runningCount / allDecks.size();
+        }
+    }
+    
+    public void updateCountLabels()
+    {
+       gw.getLblRunningCount().setText(String.valueOf(runningCount));
+       gw.getLblTrueCount().setText(String.valueOf(trueCount));
+    }
 
     public ActionListener listener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent ae) {
             
+            //computeTrueCount();
             drawScores();
+            checkDeck();
+            updateCountLabels();
             GamePanel.revalidate();
             GamePanel.repaint();
             
@@ -275,4 +319,21 @@ public class GameEngine {
 
     Timer timer = new Timer(300, listener);
 
+    public void setTrueCount(int trueCount) {
+        this.trueCount = trueCount;
+    }
+
+    public void setRunningCount(int runningCount) {
+        this.runningCount = runningCount;
+    }
+
+    public int getTrueCount() {
+        return trueCount;
+    }
+
+    public int getRunningCount() {
+        return runningCount;
+    }
+
+    
 }
