@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +27,11 @@ import twentyoneai.GameWindow;
 
 /**
  * This class handles all the game logic, rules, and behavior
+ * 
+ * Betting odds:
+ * 
+ * Normal win - 1:1
+ * Blackjack - 3:2
  *
  * @author kward60
  */
@@ -47,6 +53,8 @@ public class GameEngine {
     protected int runningCount;
     private int currDeck;
     public int totalGames = 1;
+    private double playerBet;
+    
 
     public GameEngine(GameWindow gw) {
 
@@ -83,6 +91,9 @@ public class GameEngine {
 
     public void deal() {
         
+        //Enter bet before play
+        enterBet();
+        
         //Dealer, player, dealer, player
         dealer.hit(deck.pull());
         drawCard(dealer.getHand().get(0));
@@ -101,7 +112,34 @@ public class GameEngine {
         GamePanel.revalidate();
         GamePanel.repaint();
         
+        //Check if player can split
+        if(player.canSplit())
+        {
+            gw.getBtnSplit().setEnabled(true);
+        }
+        
+        //Draw player balance
+        gw.getLblBalance().setText(String.valueOf(player.getBalance()));
+        
         timer.start();   
+    }
+    
+    /**
+     * Acquire player bet before the game start
+     */
+    public void enterBet()
+    {
+        //Disable all buttons except for bet button
+        gw.getBtnBet().setEnabled(true);
+        gw.getBtnHit().setEnabled(false);
+        gw.getBtnNewGame().setEnabled(false);
+        gw.getBtnSplit().setEnabled(false);
+        gw.getBtnStand().setEnabled(false);
+        gw.getTxtBetAmount().setEnabled(true);
+        
+        //Prompt user for bet
+        System.out.println("Please enter your bet.\n");
+
     }
 
     public void drawCard(Card c) {
@@ -156,7 +194,10 @@ public class GameEngine {
         GamePanel.repaint();
     }
     
-    
+    public void drawSplitHands()
+    {
+        //TODO move cards and draw
+    }
 
     public void setGw(GameWindow gw) {
         this.gw = gw;
@@ -206,6 +247,7 @@ public class GameEngine {
         {
             System.out.println("Player wins via bust!");
             player.addWin();
+            player.setBalance(player.getBalance() + (playerBet * 2));
         }
         else{
             if(dealer.getScore() > player.getScore())
@@ -216,11 +258,13 @@ public class GameEngine {
             {
                 System.out.println("Player wins with higher score!");
                 player.addWin();
+                player.setBalance(player.getBalance() + (playerBet * 2));
             }
             
             else if((player.getScore() == dealer.getScore()) && (player.isStand() && dealer.isStand()))
             {
                 System.out.println("Push!\n");
+                player.setBalance(player.getBalance() + playerBet);
             }
             
         }
@@ -230,6 +274,9 @@ public class GameEngine {
         //Clear players' hands
         player.getHand().clear();
         dealer.getHand().clear();
+        
+        //Update player balance label
+        gw.getLblBalance().setText(String.valueOf(player.getBalance()));
         
         gw.revalidate();
         gw.repaint();
@@ -333,6 +380,14 @@ public class GameEngine {
 
     public int getRunningCount() {
         return runningCount;
+    }
+
+    public double getPlayerBet() {
+        return playerBet;
+    }
+
+    public void setPlayerBet(double playerBet) {
+        this.playerBet = playerBet;
     }
 
     
