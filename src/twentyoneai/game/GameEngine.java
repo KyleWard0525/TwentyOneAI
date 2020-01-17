@@ -112,11 +112,13 @@ public class GameEngine {
         GamePanel.revalidate();
         GamePanel.repaint();
         
+        
         //Check if player can split
         if(player.canSplit())
         {
             gw.getBtnSplit().setEnabled(true);
         }
+        
         
         //Draw player balance
         gw.getLblBalance().setText(String.valueOf(player.getBalance()));
