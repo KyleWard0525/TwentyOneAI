@@ -6,6 +6,9 @@
 package twentyoneai;
 
 import java.awt.Color;
+import static java.lang.Thread.sleep;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -262,6 +265,15 @@ public class GameWindow extends javax.swing.JFrame {
         btnStand.setEnabled(true);
         btnNewGame.setEnabled(false);
         clearConsole();
+        
+        //Check player balance
+        if(engine.player.getBalance() <= 0)
+        {
+            JOptionPane.showMessageDialog(this, "You are out of money!", "Game Over", JOptionPane.WARNING_MESSAGE);
+            this.dispose();
+            System.exit(0);
+        }
+        
         engine.deal();
     }//GEN-LAST:event_btnNewGameActionPerformed
 
@@ -290,7 +302,6 @@ public class GameWindow extends javax.swing.JFrame {
             btnBet.setEnabled(false);
             btnHit.setEnabled(true);
             btnNewGame.setEnabled(true);
-            btnSplit.setEnabled(true);
             btnStand.setEnabled(true);
             
             txtBetAmount.setEnabled(false);
