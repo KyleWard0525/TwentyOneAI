@@ -24,11 +24,14 @@ public class Player {
     public Card cardShowing;
     public boolean bust;
     private int wins;
+    private double balance;
+    public boolean hasBet;
     
     public Player()
     {
         hand = new ArrayList<>();
         stand = false;
+        this.balance = 1000.0;
     }
     
     public void hit(Card c)
@@ -146,4 +149,13 @@ public class Player {
     {
         wins++;
     }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+    
 }
