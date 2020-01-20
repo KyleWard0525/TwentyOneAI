@@ -230,11 +230,6 @@ public class GameEngine {
     
     public void handleGameOver()
     {
-        String winner = "";
-        
-        //Stop timer
-        timer.stop();
-        
         //Handle buttons
         gw.getBtnHit().setEnabled(false);
         gw.getBtnStand().setEnabled(false);
@@ -244,10 +239,16 @@ public class GameEngine {
         if(player.bust)
         {
             System.out.println("Dealer wins via bust!");
+            gw.getLblWinner().setForeground(Color.RED);
+            gw.getLblWinner().setText("Dealer wins!");
         }
         else if(dealer.bust)
         {
             System.out.println("Player wins via bust!");
+            
+            gw.getLblWinner().setForeground(Color.BLUE);
+            gw.getLblWinner().setText("Player wins!");
+            
             player.addWin();
             player.setBalance(player.getBalance() + (playerBet * 2));
         }
@@ -255,21 +256,34 @@ public class GameEngine {
             if(dealer.getScore() > player.getScore())
             {
                 System.out.println("Dealer wins with higher score!");
+                gw.getLblWinner().setForeground(Color.RED);
+                gw.getLblWinner().setText("Dealer wins!");
             }
             else if(player.getScore() > dealer.getScore())
             {
                 System.out.println("Player wins with higher score!");
+                
+                gw.getLblWinner().setForeground(Color.BLUE);
+                gw.getLblWinner().setText("Player wins!");
+                
                 player.addWin();
                 player.setBalance(player.getBalance() + (playerBet * 2));
             }
             
-            else if((player.getScore() == dealer.getScore()) && (player.isStand() && dealer.isStand()))
+            else if((player.getScore() == dealer.getScore()))
             {
                 System.out.println("Push!\n");
+                
+                gw.getLblWinner().setForeground(Color.ORANGE);
+                gw.getLblWinner().setText("Push!");
+                
                 player.setBalance(player.getBalance() + playerBet);
             }
             
         }
+        //Stop timer
+        timer.stop();
+        
         System.out.println("Player wins: " + player.getWins());
         System.out.println("Games played: " + totalGames + "\n");
         
@@ -318,6 +332,11 @@ public class GameEngine {
         //Run until dealer is at 16 or more
         while(dealer.getScore() < 16)
         {
+            try {
+                sleep(200);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GameEngine.class.getName()).log(Level.SEVERE, null, ex);
+            }
             dealerPlay();
         }
     }
@@ -356,17 +375,18 @@ public class GameEngine {
             GamePanel.revalidate();
             GamePanel.repaint();
             
-            //TODO: Check and handle game over
+            
             if(isGameOver())
             {
                 System.out.println("\nGame Over!");
                 handleGameOver();
             }
             
+            
         }
     };
 
-    Timer timer = new Timer(300, listener);
+    Timer timer = new Timer(100, listener);
 
     public void setTrueCount(int trueCount) {
         this.trueCount = trueCount;
