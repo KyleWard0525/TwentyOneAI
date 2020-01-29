@@ -24,6 +24,7 @@ import twentyoneai.game.GameEngine;
 public class GameWindow extends javax.swing.JFrame {
     
     private GameEngine engine;
+    public boolean AIplayer;
     
     /**
      * Creates new form GameWindow
@@ -47,7 +48,6 @@ public class GameWindow extends javax.swing.JFrame {
         btnSplit = new javax.swing.JButton();
         GamePanel = new javax.swing.JPanel();
         btnNewGame = new javax.swing.JButton();
-        lblWinner = new javax.swing.JLabel();
         lblPlayerScore = new javax.swing.JLabel();
         lblDealerScore = new javax.swing.JLabel();
         lblRCountLabel = new javax.swing.JLabel();
@@ -58,6 +58,8 @@ public class GameWindow extends javax.swing.JFrame {
         lblBalance = new javax.swing.JLabel();
         txtBetAmount = new javax.swing.JTextField();
         btnBet = new javax.swing.JButton();
+        lblWinner = new javax.swing.JLabel();
+        btnToggleAI = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("21");
@@ -93,11 +95,11 @@ public class GameWindow extends javax.swing.JFrame {
         GamePanel.setLayout(GamePanelLayout);
         GamePanelLayout.setHorizontalGroup(
             GamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1104, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         GamePanelLayout.setVerticalGroup(
             GamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 514, Short.MAX_VALUE)
+            .addGap(0, 584, Short.MAX_VALUE)
         );
 
         btnNewGame.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
@@ -108,8 +110,6 @@ public class GameWindow extends javax.swing.JFrame {
                 btnNewGameActionPerformed(evt);
             }
         });
-
-        lblWinner.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
 
         lblPlayerScore.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblPlayerScore.setForeground(new java.awt.Color(0, 0, 0));
@@ -150,70 +150,78 @@ public class GameWindow extends javax.swing.JFrame {
             }
         });
 
+        lblWinner.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+
+        btnToggleAI.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        btnToggleAI.setText("Toggle AI Player");
+        btnToggleAI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnToggleAIActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(506, 506, 506)
-                .addComponent(lblDealerScore)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblWinner)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(72, 72, 72)
-                                .addComponent(btnHit, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addComponent(lblBalanceLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblBalance)))
-                        .addGap(151, 151, 151)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblPlayerScore)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtBetAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(73, 73, 73))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnStand)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnBet, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(119, 119, 119)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnSplit, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblRCountLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblRunningCount)))
-                        .addGap(100, 100, 100)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblTCountLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblTrueCount))
-                            .addComponent(btnNewGame, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(28, 28, 28))
+                        .addGap(72, 72, 72)
+                        .addComponent(btnHit, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(GamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addGap(21, 21, 21)
+                        .addComponent(lblBalanceLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblBalance)))
+                .addGap(151, 151, 151)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblPlayerScore)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                        .addComponent(txtBetAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(73, 73, 73))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnStand)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnBet, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(119, 119, 119)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSplit, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblRCountLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblRunningCount)))
+                .addGap(100, 100, 100)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblTCountLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblTrueCount))
+                    .addComponent(btnNewGame, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(lblWinner, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(203, 203, 203)
+                .addComponent(lblDealerScore)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnToggleAI)
+                .addGap(57, 57, 57))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(GamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(lblWinner))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(12, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(lblDealerScore)
-                        .addGap(12, 12, 12)))
+                        .addComponent(btnToggleAI))
+                    .addComponent(lblWinner, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(GamePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -247,7 +255,12 @@ public class GameWindow extends javax.swing.JFrame {
 
     private void btnStandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStandActionPerformed
         engine.player.setStand(true);
+        btnHit.setEnabled(false);
+        btnStand.setEnabled(false);
+        btnSplit.setEnabled(false);
         engine.dealerPlay();
+        engine.drawScores();
+        engine.handleGameOver();
     }//GEN-LAST:event_btnStandActionPerformed
 
     private void btnNewGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewGameActionPerformed
@@ -308,6 +321,16 @@ public class GameWindow extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_btnBetActionPerformed
+
+    private void btnToggleAIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnToggleAIActionPerformed
+        if(btnToggleAI.isSelected())
+        {
+            AIplayer = true;
+        }
+        else{
+            AIplayer = false;
+        }
+    }//GEN-LAST:event_btnToggleAIActionPerformed
 
     public void clearConsole()
     {
@@ -417,6 +440,7 @@ public class GameWindow extends javax.swing.JFrame {
     private javax.swing.JButton btnNewGame;
     private javax.swing.JButton btnSplit;
     private javax.swing.JButton btnStand;
+    private javax.swing.JToggleButton btnToggleAI;
     private javax.swing.JLabel lblBalance;
     private javax.swing.JLabel lblBalanceLabel;
     private javax.swing.JLabel lblDealerScore;
