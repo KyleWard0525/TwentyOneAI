@@ -60,6 +60,7 @@ public class GameEngine {
     private double playerBet;
     private DecimalFormat df;
     private DataFrame dataFrame;
+    private int numDecks = 8;
     public Agent bob;
     
     public GameEngine(GameWindow gw) {
@@ -83,11 +84,11 @@ public class GameEngine {
         dealer = new Dealer();
         player = new Player();
         currDeck = 0;
-        this.allDecks = new ArrayList<Deck>(8);
-        this.usedDecks = new ArrayList<>(8);
+        this.allDecks = new ArrayList<Deck>();
+        this.usedDecks = new ArrayList<>();
         
         //Fill list of decks
-        for(int i = 0; i < allDecks.size() - 1; i++)
+        for(int i = 0; i < numDecks - 1; i++)
         {
             allDecks.add(new Deck());
         }
@@ -157,9 +158,6 @@ public class GameEngine {
         gw.getBtnSplit().setEnabled(false);
         gw.getBtnStand().setEnabled(false);
         gw.getTxtBetAmount().setEnabled(true);
-
-        //Prompt user for bet
-        System.out.println("Please enter your bet.\n");
         
     }
     
@@ -207,7 +205,7 @@ public class GameEngine {
         }
 
         //Set count
-        this.runningCount = deck.runningCount;
+        runningCount = deck.runningCount;
         
         GamePanel.add(cardPanel);
         GamePanel.repaint();
@@ -345,29 +343,29 @@ public class GameEngine {
     
     public void checkDeck() {
         //Current deck is almost empty, change deck
-        if (deck.cardsLeft() < 2) {
-            usedDecks.add(allDecks.remove(currDeck));
-            currDeck += 1;
-            deck = allDecks.get(currDeck);
+        if (deck.cardsLeft() <= 1) {
+            allDecks.remove(0);
+            deck = allDecks.get(0);
         }
+        
+        System.out.println("Deck size: " + allDecks.size());
+        
+        
         //Only one deck remaining
-        if(allDecks.size() <= 1)
+        if(allDecks.size() == 1)
         {
-            //Loop through used decks and shuffle
-            for(int i = 0; i < usedDecks.size(); i++)
+            //Loop through and add new decks
+            for(int i = 0; i < numDecks - 1; i++)
             {
-                usedDecks.get(i).shuffle();
-                
-                //Add shuffled decks back into allDecks
-                allDecks.add(usedDecks.get(i));
+                allDecks.add(new Deck());
             }
         }
+        
     }
     
     public void computeTrueCount() {
-        if (runningCount > 0) {
-            trueCount = runningCount / allDecks.size();
-        }
+        
+        trueCount = (int) Math.ceil(runningCount / allDecks.size());
     }
     
     public void updateCountLabels() {
@@ -379,8 +377,24 @@ public class GameEngine {
         //Set player and dealer
         bob.setPlayer(player);
         bob.setDealer(dealer);
+        int units = 1;
+        
+        //1-8 bet spread
+        if(trueCount == 1)
+        {
+            units = 2;
+        }
+        else if(trueCount == 2)
+        {
+            units = 4;
+        }
+        else if(trueCount >= 3)
+        {
+            units = 8;
+        }
+        
         //Enter AI Bet
-        gw.getTxtBetAmount().setText(String.valueOf(df.format(player.getBalance() * 0.05)));
+        gw.getTxtBetAmount().setText(String.valueOf(df.format(Math.abs(units * bob.getBetUnit()))));
         gw.getBtnBet().doClick();
 
         //Get AI play
@@ -498,6 +512,14 @@ public class GameEngine {
                 handleGameOver();
             }
             
+            /*
+            //Pause after 200 games
+            if(totalGames >= 200)
+            {
+                gw.getBtnToggleAI().doClick();
+                timer.stop();
+            }
+            */
         }
     };
     
