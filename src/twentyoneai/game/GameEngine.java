@@ -14,7 +14,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import static java.lang.Thread.sleep;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -24,19 +26,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import twentyoneai.GameWindow;
+import twentyoneai.ai.Agent;
 
 /**
  * This class handles all the game logic, rules, and behavior
- * 
+ *
  * Betting odds:
- * 
- * Normal win - 1:1
- * Blackjack - 3:2
+ *
+ * Normal win - 1:1 Blackjack - 3:2
  *
  * @author kward60
  */
 public class GameEngine {
-
+    
     public static Deck deck;
     private ArrayList<Deck> allDecks = new ArrayList<>(10);
     public Dealer dealer;
@@ -54,15 +56,16 @@ public class GameEngine {
     private int currDeck;
     public int totalGames = 1;
     private double playerBet;
+    private DecimalFormat df;
+    public Agent ai;
     
-
     public GameEngine(GameWindow gw) {
-
+        
         this.gw = gw;
         this.GamePanel = gw.getGamePanel();
-
+        
         init();
-
+        
         try {
             cardBackImg = ImageIO.read(new File("C:\\Users\\user\\Documents\\NetBeansProjects\\TwentyOneAI\\img\\PNG\\blue_back.png"));
         } catch (IOException ex) {
@@ -77,7 +80,7 @@ public class GameEngine {
         dealer = new Dealer();
         player = new Player();
         currDeck = 0;
-        this.allDecks = new ArrayList<Deck>(10);
+        this.allDecks = new ArrayList<Deck>(8);
         
         deck = new Deck();
         
@@ -87,50 +90,48 @@ public class GameEngine {
         this.cardSpacing = 125;
         this.GamePanel.setBackground(new Color(0, 102, 0));
         this.trueCount = 0;
-    }
-
-    public void deal() {
+        this.df = new DecimalFormat("##.##");
+        this.ai = new Agent(this);
         
+    }
+    
+    public void deal() {
+
         //Enter bet before play
         enterBet();
-        
+
         //Dealer, player, dealer, player
         dealer.hit(deck.pull());
         drawCard(dealer.getHand().get(0));
-
-
+        
         player.hit(deck.pull());
         drawCard(player.getHand().get(0));
-
-
+        
         dealer.hit(deck.pull());
         drawCard(dealer.getHand().get(1));
-
+        
         player.hit(deck.pull());
         drawCard(player.getHand().get(1));
         
         GamePanel.revalidate();
         GamePanel.repaint();
-        
-        
+
         //Check if player can split
-        if(player.canSplit())
-        {
+        if (player.canSplit()) {
             gw.getBtnSplit().setEnabled(true);
         }
-        
-        
+
         //Draw player balance
-        gw.getLblBalance().setText(String.valueOf(player.getBalance()));
+        gw.getLblBalance().setText(String.valueOf(df.format(player.getBalance())));
         
-        timer.start();   
+        timer.start();        
+        
     }
-    
+
     /**
      * Acquire player bet before the game start
      */
-    public void enterBet()
-    {
+    public void enterBet() {
         //Disable all buttons except for bet button
         gw.getBtnBet().setEnabled(true);
         gw.getBtnHit().setEnabled(false);
@@ -138,16 +139,16 @@ public class GameEngine {
         gw.getBtnSplit().setEnabled(false);
         gw.getBtnStand().setEnabled(false);
         gw.getTxtBetAmount().setEnabled(true);
-        
+
         //Prompt user for bet
         System.out.println("Please enter your bet.\n");
-
+        
     }
-
+    
     public void drawCard(Card c) {
         JPanel cardPanel = new JPanel();
         JLabel cardLabel = new JLabel(c.getName());
-
+        
         cardPanel.setSize(c.width, c.height);
         cardPanel.add(cardLabel);
         cardPanel.setBackground(Color.GRAY);
@@ -169,14 +170,12 @@ public class GameEngine {
                 break;
         }
 
-        /*
         //Check if hidden card
         if (dealer.getHand().get(0) == c) {
             cardPanel.removeAll();
             cardPanel.setBackground(Color.BLACK);
             cardPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE));
         }
-        */
 
         //Check if player card or dealer card
         if (player.getHand().contains(c)) {
@@ -196,31 +195,25 @@ public class GameEngine {
         GamePanel.repaint();
     }
     
-    public void drawSplitHands()
-    {
+    public void drawSplitHands() {
         //TODO move cards and draw
     }
-
+    
     public void setGw(GameWindow gw) {
         this.gw = gw;
     }
-
+    
     public boolean isGameOver() {
         //21 or bust
         if (player.getScore() > 21) {
             player.bust = true;
             return true;
-        }
-        else if(dealer.getScore() > 21)
-        {
+        } else if (dealer.getScore() > 21) {
             dealer.bust = true;
             return true;
-        }
-        else if(player.getScore() == 21 && dealer.getScore() == 21)
-        {
+        } else if (player.getScore() == 21 && dealer.getScore() == 21) {
             return true;
-        }
-        //Both players stand
+        } //Both players stand
         else if (player.isStand() && dealer.isStand()) {
             return true;
         } else {
@@ -228,22 +221,18 @@ public class GameEngine {
         }
     }
     
-    public void handleGameOver()
-    {
+    public void handleGameOver() {
         //Handle buttons
         gw.getBtnHit().setEnabled(false);
         gw.getBtnStand().setEnabled(false);
         gw.getBtnNewGame().setEnabled(true);
-        
+
         //Determine winner
-        if(player.bust)
-        {
+        if (player.bust) {
             System.out.println("Dealer wins via bust!");
             gw.getLblWinner().setForeground(Color.RED);
             gw.getLblWinner().setText("Dealer wins!");
-        }
-        else if(dealer.bust)
-        {
+        } else if (dealer.bust) {
             System.out.println("Player wins via bust!");
             
             gw.getLblWinner().setForeground(Color.BLUE);
@@ -251,16 +240,12 @@ public class GameEngine {
             
             player.addWin();
             player.setBalance(player.getBalance() + (playerBet * 2));
-        }
-        else{
-            if(dealer.getScore() > player.getScore())
-            {
+        } else {
+            if (dealer.getScore() > player.getScore()) {
                 System.out.println("Dealer wins with higher score!");
                 gw.getLblWinner().setForeground(Color.RED);
                 gw.getLblWinner().setText("Dealer wins!");
-            }
-            else if(player.getScore() > dealer.getScore())
-            {
+            } else if (player.getScore() > dealer.getScore()) {
                 System.out.println("Player wins with higher score!");
                 
                 gw.getLblWinner().setForeground(Color.BLUE);
@@ -268,10 +253,7 @@ public class GameEngine {
                 
                 player.addWin();
                 player.setBalance(player.getBalance() + (playerBet * 2));
-            }
-            
-            else if((player.getScore() == dealer.getScore()))
-            {
+            } else if ((player.getScore() == dealer.getScore())) {
                 System.out.println("Push!\n");
                 
                 gw.getLblWinner().setForeground(Color.ORANGE);
@@ -286,52 +268,48 @@ public class GameEngine {
         
         System.out.println("Player wins: " + player.getWins());
         System.out.println("Games played: " + totalGames + "\n");
-        
+        System.out.println("Win percentage: " + df.format(((double)player.getWins() / (double)totalGames)*100.00) + "%");
+
         //Clear players' hands
         player.getHand().clear();
         dealer.getHand().clear();
-        
+
         //Update player balance label
-        gw.getLblBalance().setText(String.valueOf(player.getBalance()));
+        gw.getLblBalance().setText(String.valueOf(df.format(player.getBalance())));
+        
+        gw.getBtnNewGame().doClick();
         
         gw.revalidate();
         gw.repaint();
     }
     
-    public void drawScores()
-    {
+    public void drawScores() {
         int playerScore = player.getScore();
         int dealerScore = dealer.getScore();
         gw.getLblPlayerScore().setText(String.valueOf(playerScore));
         gw.getLblDealerScore().setText(String.valueOf(dealerScore));
     }
     
-    public void dealerPlay()
-    {
+    public void dealerPlay() {
         int action = dealer.action();
-        
+
         //Base case
-        if(dealer.isStand())
-        {
+        if (dealer.isStand()) {
             return;
         }
-        
+
         //Stand
-        if(action == 0)
-        {
+        if (action == 0) {
             dealer.setStand(true);
             return;
-        }
-        //Hit
-        else if(action == 1)
-        {
+        } //Hit
+        else if (action == 1) {
             Card c = deck.pull();
             dealer.hit(c);
             drawCard(c);
         }
         //Run until dealer is at 16 or more
-        while(dealer.getScore() < 16)
-        {
+        while (dealer.getScore() < 16) {
             try {
                 sleep(200);
             } catch (InterruptedException ex) {
@@ -341,33 +319,65 @@ public class GameEngine {
         }
     }
     
-    public void checkDeck()
-    {
-        if(deck.cardsLeft() < 2)
-        {
+    public void checkDeck() {
+        if (deck.cardsLeft() < 2) {
             allDecks.remove(currDeck);
             currDeck += 1;
             deck = allDecks.get(currDeck);
         }
     }
     
-    public void computeTrueCount()
-    {
-        if(runningCount > 0) {
-        trueCount = runningCount / allDecks.size();
+    public void computeTrueCount() {
+        if (runningCount > 0) {
+            trueCount = runningCount / allDecks.size();
         }
     }
     
-    public void updateCountLabels()
-    {
-       gw.getLblRunningCount().setText(String.valueOf(runningCount));
-       gw.getLblTrueCount().setText(String.valueOf(trueCount));
+    public void updateCountLabels() {
+        gw.getLblRunningCount().setText(String.valueOf(runningCount));
+        gw.getLblTrueCount().setText(String.valueOf(trueCount));
     }
+    
+    public void playAI() {
+        //Set player and dealer
+        ai.setPlayer(player);
+        ai.setDealer(dealer);
+        //Enter AI Bet
+        gw.getTxtBetAmount().setText(String.valueOf(df.format(player.getBalance() * 0.1)));
+        gw.getBtnBet().doClick();
 
+        //Get AI play
+        double[] output = ai.getPlay();
+        int[] play = new int[output.length];
+        
+        //Round outputs to integers
+        for(int i = 0; i < play.length; i++)
+        {
+            play[i] = (int) Math.round(output[i]);
+        }
+        
+        System.out.println("AI play = " + Arrays.toString(play));
+
+        //Hit
+        if (play[0] == 1 && play[1] == 0) {
+            gw.getBtnHit().doClick();
+        } //Stand
+        else if (play[0] == 0 && play[1] == 1) {
+            gw.getBtnStand().doClick();
+        }
+    }
+    
     public ActionListener listener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent ae) {
             
+            ai.setrCount(runningCount);
+            
+            if (gw.AIplayer) {
+                
+                playAI();
+            }
+
             //computeTrueCount();
             drawScores();
             checkDeck();
@@ -375,42 +385,38 @@ public class GameEngine {
             GamePanel.revalidate();
             GamePanel.repaint();
             
-            
-            if(isGameOver())
-            {
+            if (isGameOver()) {
                 System.out.println("\nGame Over!");
                 handleGameOver();
             }
             
-            
         }
     };
-
+    
     Timer timer = new Timer(100, listener);
-
+    
     public void setTrueCount(int trueCount) {
         this.trueCount = trueCount;
     }
-
+    
     public void setRunningCount(int runningCount) {
         this.runningCount = runningCount;
     }
-
+    
     public int getTrueCount() {
         return trueCount;
     }
-
+    
     public int getRunningCount() {
         return runningCount;
     }
-
+    
     public double getPlayerBet() {
         return playerBet;
     }
-
+    
     public void setPlayerBet(double playerBet) {
         this.playerBet = playerBet;
     }
-
     
 }
