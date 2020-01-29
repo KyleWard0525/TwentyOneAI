@@ -5,6 +5,8 @@
  */
 package twentyoneai;
 
+import javax.swing.JLabel;
+
 /**
  *
  * @author user
@@ -179,6 +181,34 @@ public class DataFrame extends javax.swing.JFrame {
             }
         });
     }
+    
+    
+    //Getters and Setters
+    
+    public JLabel getLblAIMove() {
+        return lblAIMove;
+    }
+
+    public JLabel getLblAIWins() {
+        return lblAIWins;
+    }
+
+    public JLabel getLblDealerWins() {
+        return lblDealerWins;
+    }
+
+    public JLabel getLblTargetMove() {
+        return lblTargetMove;
+    }
+
+    public JLabel getLblTotalError() {
+        return lblTotalError;
+    }
+
+    //Getters and Setters
+    public JLabel getLblWinPerc() {
+        return lblWinPerc;
+    }    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lblAIMove;
