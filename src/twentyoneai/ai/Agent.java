@@ -53,6 +53,7 @@ public class Agent {
     private int rCount;
     private int trueCount;
     private BasicStrategy basic;
+    private int betUnit;
 
     public Agent(GameEngine ge) {
         this.engine = engine;
@@ -66,6 +67,7 @@ public class Agent {
         this.pop = new NEATPopulation(numInputs, numOutputs, popSize);
         this.gen = 0;
         this.basic = new BasicStrategy();
+        this.betUnit = 100;
 
         //Create random population
         pop.reset();
@@ -81,6 +83,9 @@ public class Agent {
         do {
             trainer.iteration();
         } while (trainer.getError() > 0.01);
+        
+        //Finish training for this round
+        trainer.finishTraining();
 
         //Get best network
         network = (NEATNetwork) trainer.getCODEC().decode(trainer.getBestGenome());
@@ -275,4 +280,12 @@ public class Agent {
         this.trueCount = trueCount;
     }
 
+    public int getBetUnit() {
+        return betUnit;
+    }
+
+    public void setBetUnit(int betUnit) {
+        this.betUnit = betUnit;
+    }
+    
 }
