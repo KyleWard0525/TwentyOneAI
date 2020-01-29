@@ -32,6 +32,7 @@ import twentyoneai.game.Player;
  * 4) Number of cards in hand
  * 5) Player wins
  * 6) Balance
+ * 7) True count
  * 
  * Outputs:
  * 1) Hit
@@ -54,6 +55,7 @@ public class Agent {
     private Player player;
     private Dealer dealer;
     private int rCount;
+    private int trueCount;
     
     public Agent(GameEngine ge)
     {
@@ -64,7 +66,7 @@ public class Agent {
     
     public void init()
     {
-        this.numInputs = 6;
+        this.numInputs = 7;
         this.numOutputs = 2;
         this.popSize = 500;
         this.pop = new NEATPopulation(numInputs, numOutputs, popSize);
@@ -104,6 +106,7 @@ public class Agent {
         inputs[3] = player.getHand().size();
         inputs[4] = player.getWins();
         inputs[5] = player.getBalance();
+        inputs[6] = trueCount;
         
         //Don't hit
         //Low running count and high score
@@ -173,7 +176,14 @@ public class Agent {
     public void setrCount(int rCount) {
         this.rCount = rCount;
     }
-    
+
+    public int getTrueCount() {
+        return trueCount;
+    }
+
+    public void setTrueCount(int trueCount) {
+        this.trueCount = trueCount;
+    }
     
 
 }
