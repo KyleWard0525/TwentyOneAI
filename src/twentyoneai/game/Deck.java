@@ -32,8 +32,8 @@ public class Deck {
      */
     private void init()
     {
-        cards = new ArrayList<>(SIZE);
-        pulledCards = new ArrayList<>(SIZE);
+        cards = new ArrayList<>();
+        pulledCards = new ArrayList<>();
         runningCount = 0;
         buildDeck();
         shuffle();
@@ -80,7 +80,8 @@ public class Deck {
      */
     public Card pull()
     {
-        if(cards.size() < 4)
+        
+        if(cards.size() < 1)
         {
             reset();
         }
