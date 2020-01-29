@@ -31,8 +31,8 @@ public class DataFrame extends javax.swing.JFrame {
 
         lblAIWinsLabel = new javax.swing.JLabel();
         lblAIWins = new javax.swing.JLabel();
-        lblDealerWinsLabel = new javax.swing.JLabel();
-        lblDealerWins = new javax.swing.JLabel();
+        lblTotalGamesLabel = new javax.swing.JLabel();
+        lblTotalGames = new javax.swing.JLabel();
         lblWinPercLabel = new javax.swing.JLabel();
         lblWinPerc = new javax.swing.JLabel();
         lblTargetMoveLabel = new javax.swing.JLabel();
@@ -41,6 +41,8 @@ public class DataFrame extends javax.swing.JFrame {
         lblAIMove = new javax.swing.JLabel();
         lblTotalErrorLabel = new javax.swing.JLabel();
         lblTotalError = new javax.swing.JLabel();
+        lblWinningsLabel = new javax.swing.JLabel();
+        lblWinnings = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Training Data");
@@ -51,11 +53,11 @@ public class DataFrame extends javax.swing.JFrame {
         lblAIWins.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblAIWins.setText("0");
 
-        lblDealerWinsLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        lblDealerWinsLabel.setText("Dealer Wins: ");
+        lblTotalGamesLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblTotalGamesLabel.setText("Total Games: ");
 
-        lblDealerWins.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        lblDealerWins.setText("0");
+        lblTotalGames.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblTotalGames.setText("0");
 
         lblWinPercLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblWinPercLabel.setText("AI Win Percentage: ");
@@ -81,6 +83,12 @@ public class DataFrame extends javax.swing.JFrame {
         lblTotalError.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblTotalError.setText("0");
 
+        lblWinningsLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblWinningsLabel.setText("Total Winnings: $");
+
+        lblWinnings.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblWinnings.setText("0");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -88,6 +96,10 @@ public class DataFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblWinningsLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblWinnings))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblTotalErrorLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -105,9 +117,9 @@ public class DataFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblWinPerc))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblDealerWinsLabel)
+                        .addComponent(lblTotalGamesLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblDealerWins))
+                        .addComponent(lblTotalGames))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblAIWinsLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -123,8 +135,8 @@ public class DataFrame extends javax.swing.JFrame {
                     .addComponent(lblAIWins))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDealerWinsLabel)
-                    .addComponent(lblDealerWins))
+                    .addComponent(lblTotalGamesLabel)
+                    .addComponent(lblTotalGames))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblWinPercLabel)
@@ -141,7 +153,11 @@ public class DataFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTotalErrorLabel)
                     .addComponent(lblTotalError))
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblWinningsLabel)
+                    .addComponent(lblWinnings))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pack();
@@ -194,7 +210,7 @@ public class DataFrame extends javax.swing.JFrame {
     }
 
     public JLabel getLblDealerWins() {
-        return lblDealerWins;
+        return lblTotalGames;
     }
 
     public JLabel getLblTargetMove() {
@@ -210,18 +226,25 @@ public class DataFrame extends javax.swing.JFrame {
         return lblWinPerc;
     }    
 
+    public JLabel getLblWinnings() {
+        return lblWinnings;
+    }
+    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lblAIMove;
     private javax.swing.JLabel lblAIMoveLabel;
     private javax.swing.JLabel lblAIWins;
     private javax.swing.JLabel lblAIWinsLabel;
-    private javax.swing.JLabel lblDealerWins;
-    private javax.swing.JLabel lblDealerWinsLabel;
     private javax.swing.JLabel lblTargetMove;
     private javax.swing.JLabel lblTargetMoveLabel;
     private javax.swing.JLabel lblTotalError;
     private javax.swing.JLabel lblTotalErrorLabel;
+    private javax.swing.JLabel lblTotalGames;
+    private javax.swing.JLabel lblTotalGamesLabel;
     private javax.swing.JLabel lblWinPerc;
     private javax.swing.JLabel lblWinPercLabel;
+    private javax.swing.JLabel lblWinnings;
+    private javax.swing.JLabel lblWinningsLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -28,6 +28,11 @@
               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
+                      <Component id="lblWinningsLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lblWinnings" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
                       <Component id="lblTotalErrorLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblTotalError" min="-2" max="-2" attributes="0"/>
@@ -48,9 +53,9 @@
                       <Component id="lblWinPerc" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
-                      <Component id="lblDealerWinsLabel" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblTotalGamesLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lblDealerWins" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblTotalGames" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="lblAIWinsLabel" min="-2" max="-2" attributes="0"/>
@@ -72,8 +77,8 @@
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lblDealerWinsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblDealerWins" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblTotalGamesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblTotalGames" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -95,7 +100,12 @@
                   <Component id="lblTotalErrorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="lblTotalError" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="64" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblWinningsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblWinnings" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="22" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -117,15 +127,15 @@
         <Property name="text" type="java.lang.String" value="0"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblDealerWinsLabel">
+    <Component class="javax.swing.JLabel" name="lblTotalGamesLabel">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Dialog" size="18" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Dealer Wins: "/>
+        <Property name="text" type="java.lang.String" value="Total Games: "/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblDealerWins">
+    <Component class="javax.swing.JLabel" name="lblTotalGames">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Dialog" size="18" style="1"/>
@@ -190,6 +200,22 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblTotalError">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Dialog" size="18" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="0"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblWinningsLabel">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Dialog" size="18" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Total Winnings: $"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblWinnings">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Dialog" size="18" style="1"/>
