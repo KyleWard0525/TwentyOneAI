@@ -1,6 +1,14 @@
 # TwentyOneAI
 This AI is being developed to learn how to play the popular card game "21"
 
+v1.05
+- AI player now learns basic strategy
+- AI player uses 1-8 bet spread (betting strategy)
+- Added new frame to display training data
+- AI player is consistently turning a profit
+- Fixed bug where dealer wouldn't play after AI
+- Fixed bug where true count was being computed incorrectly
+
 v1.04
 - Added AI player with basic [dealer] strategy
 - Added button to toggle AI player
