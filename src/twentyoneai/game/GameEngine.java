@@ -25,6 +25,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import twentyoneai.DataFrame;
 import twentyoneai.GameWindow;
 import twentyoneai.ai.Agent;
 
@@ -58,6 +59,7 @@ public class GameEngine {
     public int totalGames = 1;
     private double playerBet;
     private DecimalFormat df;
+    private DataFrame dataFrame;
     public Agent bob;
     
     public GameEngine(GameWindow gw) {
@@ -102,7 +104,10 @@ public class GameEngine {
         this.trueCount = 0;
         this.df = new DecimalFormat("##.##");
         this.bob = new Agent(this);
+        this.dataFrame = new DataFrame();
         
+        //Show data frame
+        dataFrame.setVisible(true);
     }
     
     public void deal() {
@@ -391,8 +396,57 @@ public class GameEngine {
         if (play[0] == 1 && play[1] == 0) {
             gw.getBtnHit().doClick();
         } //Stand
-        else if (play[0] == 0 && play[1] == 1) {
+        else if (play[0] == 0 && play[1] == 0) {
             gw.getBtnStand().doClick();
+        }
+    }
+    
+    public void updateDataFrame()
+    {
+        dataFrame.getLblAIWins().setText(String.valueOf(player.getWins()));
+        dataFrame.getLblDealerWins().setText(String.valueOf(dealer.getWins()));
+        dataFrame.getLblWinPerc().setText(df.format(String.valueOf((player.getWins() / totalGames) * 100.00)));
+        
+        double[] ideal = bob.getTarget();
+        String idealMove = "";
+        String strBobMove = "";
+        
+        //Check ideal for best move
+        if(ideal[0] == 1 && ideal[1] == 0)
+        {
+            //Hit
+            idealMove = "Hit";
+        }
+        else if(ideal[0] == 0 && ideal[1] == 0)
+        {
+            //Stand
+            idealMove = "Stand";
+        }
+        dataFrame.getLblTargetMove().setText(idealMove);
+        
+        //Get AI move
+        double[] bobMove = bob.getPlay();
+        
+        if(bobMove[0] == 1 && bobMove[1] == 0)
+        {
+            strBobMove = "Hit";
+        }
+        else if(bobMove[0] == 0 && bobMove[1] == 0)
+        {
+            strBobMove = "Stand";
+        }
+        
+        //Check ideal vs bob move
+        if(!strBobMove.equals(idealMove))
+        {
+            dataFrame.getLblAIMove().setForeground(Color.RED);
+            dataFrame.getLblAIMove().setText(strBobMove);
+            dataFrame.getLblTotalError().setText(String.valueOf(Integer.valueOf(dataFrame.getLblTotalError().getText()) - 1));
+        }
+        else{
+            dataFrame.getLblAIMove().setForeground(Color.GREEN);
+            dataFrame.getLblAIMove().setText(strBobMove);
+            dataFrame.getLblTotalError().setText(String.valueOf(Integer.valueOf(dataFrame.getLblTotalError().getText()) + 1));
         }
     }
     
@@ -404,10 +458,10 @@ public class GameEngine {
             bob.setTrueCount(trueCount);
             
             if (gw.AIplayer) {
-                
                 playAI();
             }
 
+            updateDataFrame();
             checkDeck();
             computeTrueCount();
             drawScores();
