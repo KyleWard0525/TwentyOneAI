@@ -56,7 +56,7 @@ public class GameEngine {
     protected int trueCount;
     protected int runningCount;
     private int currDeck;
-    public int totalGames = 1;
+    public static int totalGames = 1;
     private double playerBet;
     private DecimalFormat df;
     private DataFrame dataFrame;
@@ -108,6 +108,9 @@ public class GameEngine {
         
         //Show data frame
         dataFrame.setVisible(true);
+        
+        //Toggle AI player
+        gw.getBtnToggleAI().doClick();
     }
     
     public void deal() {
@@ -377,7 +380,7 @@ public class GameEngine {
         bob.setPlayer(player);
         bob.setDealer(dealer);
         //Enter AI Bet
-        gw.getTxtBetAmount().setText(String.valueOf(df.format(player.getBalance() * 0.1)));
+        gw.getTxtBetAmount().setText(String.valueOf(df.format(player.getBalance() * 0.05)));
         gw.getBtnBet().doClick();
 
         //Get AI play
@@ -404,12 +407,24 @@ public class GameEngine {
     public void updateDataFrame()
     {
         dataFrame.getLblAIWins().setText(String.valueOf(player.getWins()));
-        dataFrame.getLblDealerWins().setText(String.valueOf(dealer.getWins()));
-        dataFrame.getLblWinPerc().setText(df.format(String.valueOf((player.getWins() / totalGames) * 100.00)));
+        dataFrame.getLblDealerWins().setText(String.valueOf(totalGames));
+        dataFrame.getLblWinPerc().setText(String.valueOf(df.format(((double)player.getWins() / (double)totalGames) * 100.00)) + "%");
+        
+        double winnings = player.getBalance() - 1000.0;
+        
+        if(winnings < 0)
+        {
+            dataFrame.getLblWinnings().setForeground(Color.RED);
+        }
+        else{
+            dataFrame.getLblWinnings().setForeground(new Color(50,205,50));
+        }
+        
+        dataFrame.getLblWinnings().setText(String.valueOf(df.format(winnings)));
         
         double[] ideal = bob.getTarget();
         String idealMove = "";
-        String strBobMove = "";
+        String strBobMove = "default_move";
         
         //Check ideal for best move
         if(ideal[0] == 1 && ideal[1] == 0)
@@ -427,27 +442,33 @@ public class GameEngine {
         //Get AI move
         double[] bobMove = bob.getPlay();
         
-        if(bobMove[0] == 1 && bobMove[1] == 0)
+        if(bobMove[0] == 1)
         {
             strBobMove = "Hit";
         }
-        else if(bobMove[0] == 0 && bobMove[1] == 0)
+        else if(bobMove[0] == 0)
         {
             strBobMove = "Stand";
         }
+        dataFrame.getLblAIMove().setText(strBobMove);
         
         //Check ideal vs bob move
-        if(!strBobMove.equals(idealMove))
+        if(strBobMove != idealMove)
         {
             dataFrame.getLblAIMove().setForeground(Color.RED);
-            dataFrame.getLblAIMove().setText(strBobMove);
-            dataFrame.getLblTotalError().setText(String.valueOf(Integer.valueOf(dataFrame.getLblTotalError().getText()) - 1));
-        }
-        else{
-            dataFrame.getLblAIMove().setForeground(Color.GREEN);
-            dataFrame.getLblAIMove().setText(strBobMove);
             dataFrame.getLblTotalError().setText(String.valueOf(Integer.valueOf(dataFrame.getLblTotalError().getText()) + 1));
         }
+        else{
+            dataFrame.getLblTotalError().setText(String.valueOf(Integer.valueOf(dataFrame.getLblTotalError().getText()) - 1));
+            
+            //Check total error
+            if(Integer.valueOf(dataFrame.getLblTotalError().getText()) < 0)
+            {
+                //Reset to 0
+                dataFrame.getLblTotalError().setText(String.valueOf(0));
+            }
+        }
+        
     }
     
     public ActionListener listener = new ActionListener() {
@@ -456,11 +477,14 @@ public class GameEngine {
             
             bob.setrCount(runningCount);
             bob.setTrueCount(trueCount);
+            bob.setDealer(dealer);
+            bob.setPlayer(player);
             
             if (gw.AIplayer) {
                 playAI();
             }
 
+            dealerPlay();
             updateDataFrame();
             checkDeck();
             computeTrueCount();
