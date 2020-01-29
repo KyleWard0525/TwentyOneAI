@@ -57,7 +57,7 @@ public class GameEngine {
     public int totalGames = 1;
     private double playerBet;
     private DecimalFormat df;
-    public Agent ai;
+    public Agent bob;
     
     public GameEngine(GameWindow gw) {
         
@@ -91,7 +91,7 @@ public class GameEngine {
         this.GamePanel.setBackground(new Color(0, 102, 0));
         this.trueCount = 0;
         this.df = new DecimalFormat("##.##");
-        this.ai = new Agent(this);
+        this.bob = new Agent(this);
         
     }
     
@@ -266,9 +266,8 @@ public class GameEngine {
         //Stop timer
         timer.stop();
         
-        System.out.println("Player wins: " + player.getWins());
-        System.out.println("Games played: " + totalGames + "\n");
-        System.out.println("Win percentage: " + df.format(((double)player.getWins() / (double)totalGames)*100.00) + "%");
+        //Print game information
+        printGameData();
 
         //Clear players' hands
         player.getHand().clear();
@@ -288,6 +287,13 @@ public class GameEngine {
         int dealerScore = dealer.getScore();
         gw.getLblPlayerScore().setText(String.valueOf(playerScore));
         gw.getLblDealerScore().setText(String.valueOf(dealerScore));
+    }
+    
+    public void printGameData()
+    {
+        System.out.println("Player wins: " + player.getWins());
+        System.out.println("Games played: " + totalGames + "\n");
+        System.out.println("Win percentage: " + df.format(((double)player.getWins() / (double)totalGames)*100.00) + "%");
     }
     
     public void dealerPlay() {
@@ -340,14 +346,14 @@ public class GameEngine {
     
     public void playAI() {
         //Set player and dealer
-        ai.setPlayer(player);
-        ai.setDealer(dealer);
+        bob.setPlayer(player);
+        bob.setDealer(dealer);
         //Enter AI Bet
         gw.getTxtBetAmount().setText(String.valueOf(df.format(player.getBalance() * 0.1)));
         gw.getBtnBet().doClick();
 
         //Get AI play
-        double[] output = ai.getPlay();
+        double[] output = bob.getPlay();
         int[] play = new int[output.length];
         
         //Round outputs to integers
@@ -371,7 +377,7 @@ public class GameEngine {
         @Override
         public void actionPerformed(ActionEvent ae) {
             
-            ai.setrCount(runningCount);
+            bob.setrCount(runningCount);
             
             if (gw.AIplayer) {
                 
