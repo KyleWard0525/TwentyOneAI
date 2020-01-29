@@ -60,9 +60,9 @@ public class Agent {
     }
 
     public void init() {
-        this.numInputs = 7;
+        this.numInputs = 6;
         this.numOutputs = 2;
-        this.popSize = 500;
+        this.popSize = 1000;
         this.pop = new NEATPopulation(numInputs, numOutputs, popSize);
         this.gen = 0;
         this.basic = new BasicStrategy();
@@ -85,7 +85,14 @@ public class Agent {
         //Get best network
         network = (NEATNetwork) trainer.getCODEC().decode(trainer.getBestGenome());
 
-        return network.compute(getInputData()).getData();
+        double[] play = network.compute(getInputData()).getData();
+        
+        for(int i = 0; i < play.length; i++)
+        {
+            play[i] = Math.round(play[i]);
+        }
+        
+        return play;
     }
 
     public MLDataSet getTrainSet() {
@@ -93,12 +100,12 @@ public class Agent {
         double[] ideal = new double[numOutputs];
 
         inputs[0] = player.getScore();
-        inputs[1] = dealer.getScore() - dealer.getHand().get(0).getValue();
+        inputs[1] = dealer.getHand().get(1).getValue();
         inputs[2] = rCount;
-        inputs[3] = player.getHand().size();
-        inputs[4] = player.getWins();
-        inputs[5] = player.getBalance();
-        inputs[6] = trueCount;
+        inputs[3] = trueCount;
+        inputs[4] = ((double) player.getWins() / (double)GameEngine.totalGames) * 100.00;
+        inputs[5] = player.getWins();
+        
 
         ideal = getTarget();
 
@@ -117,10 +124,9 @@ public class Agent {
         inputs[0] = player.getScore();
         inputs[1] = dealer.getHand().get(1).getValue();
         inputs[2] = rCount;
-        inputs[3] = player.getHand().size();
-        inputs[4] = player.getWins();
-        inputs[5] = player.getBalance();
-        inputs[6] = trueCount;
+        inputs[3] = trueCount;
+        inputs[4] = ((double) player.getWins() / (double)GameEngine.totalGames) * 100.00;
+        inputs[5] = player.getWins();
 
         MLData inputData = new BasicMLData(inputs);
 
@@ -130,9 +136,14 @@ public class Agent {
     public double[] getTarget() {
         double[] ideal = new double[2];
         ArrayList<int[]> strategyMatrix = new ArrayList<>();
-        int[] strategyRow;
         boolean hard = false;
+        
         int dealerCard = dealer.getHand().get(1).getValue();
+        int change = 2;
+        
+        if(dealerCard < 2) {
+            change = 1;
+        }
 
         //Check if soft or hard hand
         for (Card c : player.getHand()) {
@@ -158,38 +169,38 @@ public class Agent {
                 case 6:
                 case 7:
                 case 8:
-                    ideal = new double[]{strategyMatrix.get(0)[dealerCard - 2], 0};
+                    ideal = new double[]{strategyMatrix.get(0)[dealerCard - change], 0};
                     break;
                 case 9:
-                    ideal = new double[]{strategyMatrix.get(1)[dealerCard - 2], 0};
+                    ideal = new double[]{strategyMatrix.get(1)[dealerCard - change], 0};
                     break;
                 case 10:
-                    ideal = new double[]{strategyMatrix.get(2)[dealerCard - 2], 0};
+                    ideal = new double[]{strategyMatrix.get(2)[dealerCard - change], 0};
                     break;
                 case 11:
-                    ideal = new double[]{strategyMatrix.get(3)[dealerCard - 2], 0};
+                    ideal = new double[]{strategyMatrix.get(3)[dealerCard - change], 0};
                     break;
                 case 12:
-                    ideal = new double[]{strategyMatrix.get(4)[dealerCard - 2], 0};
+                    ideal = new double[]{strategyMatrix.get(4)[dealerCard - change], 0};
                     break;
                 case 13:
-                    ideal = new double[]{strategyMatrix.get(5)[dealerCard - 2], 0};
+                    ideal = new double[]{strategyMatrix.get(5)[dealerCard - change], 0};
                     break;
                 case 14:
-                    ideal = new double[]{strategyMatrix.get(6)[dealerCard - 2], 0};
+                    ideal = new double[]{strategyMatrix.get(6)[dealerCard - change], 0};
                     break;
                 case 15:
-                    ideal = new double[]{strategyMatrix.get(7)[dealerCard - 2], 0};
+                    ideal = new double[]{strategyMatrix.get(7)[dealerCard - change], 0};
                     break;
                 case 16:
-                    ideal = new double[]{strategyMatrix.get(8)[dealerCard - 2], 0};
+                    ideal = new double[]{strategyMatrix.get(8)[dealerCard - change], 0};
                     break;
                 case 17:
                 case 18:
                 case 19:
                 case 20:
                 case 21:
-                    ideal = new double[]{strategyMatrix.get(9)[dealerCard - 2], 0};
+                    ideal = new double[]{strategyMatrix.get(9)[dealerCard - change], 0};
                     break;
             }
         }
