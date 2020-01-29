@@ -310,6 +310,7 @@ public class GameEngine {
         System.out.println("Player wins: " + player.getWins());
         System.out.println("Games played: " + totalGames + "\n");
         System.out.println("Win percentage: " + df.format(((double)player.getWins() / (double)totalGames)*100.00) + "%");
+        System.out.println("Decks remaining: " + allDecks.size());
     }
     
     public void dealerPlay() {
@@ -347,8 +348,6 @@ public class GameEngine {
             allDecks.remove(0);
             deck = allDecks.get(0);
         }
-        
-        System.out.println("Deck size: " + allDecks.size());
         
         
         //Only one deck remaining
@@ -406,8 +405,6 @@ public class GameEngine {
         {
             play[i] = (int) Math.round(output[i]);
         }
-        
-        System.out.println("AI play = " + Arrays.toString(play));
 
         //Hit
         if (play[0] == 1 && play[1] == 0) {
@@ -485,6 +482,7 @@ public class GameEngine {
         
     }
     
+    
     public ActionListener listener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent ae) {
@@ -512,14 +510,11 @@ public class GameEngine {
                 handleGameOver();
             }
             
-            /*
-            //Pause after 200 games
-            if(totalGames >= 200)
+            //Save AI every 100 games
+            if(totalGames % 100 == 0)
             {
-                gw.getBtnToggleAI().doClick();
-                timer.stop();
+                bob.save();
             }
-            */
         }
     };
     
