@@ -40,7 +40,8 @@ import twentyoneai.ai.Agent;
 public class GameEngine {
     
     public static Deck deck;
-    private ArrayList<Deck> allDecks = new ArrayList<>(10);
+    private ArrayList<Deck> allDecks;
+    private ArrayList<Deck> usedDecks;
     public Dealer dealer;
     public Player player;
     private GameWindow gw;
@@ -81,8 +82,17 @@ public class GameEngine {
         player = new Player();
         currDeck = 0;
         this.allDecks = new ArrayList<Deck>(8);
+        this.usedDecks = new ArrayList<>(8);
         
-        deck = new Deck();
+        //Fill list of decks
+        for(int i = 0; i < allDecks.size() - 1; i++)
+        {
+            allDecks.add(new Deck());
+        }
+        
+        //Create starting deck and add to deck list
+        this.deck = new Deck();
+        allDecks.add(deck);
         
         this.dealerY = 0;
         this.playerY = GamePanel.getHeight() - 150;
@@ -326,10 +336,23 @@ public class GameEngine {
     }
     
     public void checkDeck() {
+        //Current deck is almost empty, change deck
         if (deck.cardsLeft() < 2) {
-            allDecks.remove(currDeck);
+            usedDecks.add(allDecks.remove(currDeck));
             currDeck += 1;
             deck = allDecks.get(currDeck);
+        }
+        //Only one deck remaining
+        if(allDecks.size() <= 1)
+        {
+            //Loop through used decks and shuffle
+            for(int i = 0; i < usedDecks.size(); i++)
+            {
+                usedDecks.get(i).shuffle();
+                
+                //Add shuffled decks back into allDecks
+                allDecks.add(usedDecks.get(i));
+            }
         }
     }
     
@@ -378,15 +401,16 @@ public class GameEngine {
         public void actionPerformed(ActionEvent ae) {
             
             bob.setrCount(runningCount);
+            bob.setTrueCount(trueCount);
             
             if (gw.AIplayer) {
                 
                 playAI();
             }
 
-            //computeTrueCount();
-            drawScores();
             checkDeck();
+            computeTrueCount();
+            drawScores();
             updateCountLabels();
             GamePanel.revalidate();
             GamePanel.repaint();
