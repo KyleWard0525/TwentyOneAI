@@ -5,6 +5,12 @@
  */
 package twentyoneai.ai;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.encog.ml.CalculateScore;
@@ -98,6 +104,37 @@ public class Agent {
         }
         
         return play;
+    }
+    
+    public void save()
+    {
+        try {
+                FileOutputStream out = new FileOutputStream(new File("network.model"));
+                ObjectOutputStream o = new ObjectOutputStream(out);
+                o.writeObject(network);
+                out.close();
+                o.close();
+                System.gc();
+                System.out.println("Network saved!");
+            } catch (Exception e) {
+                System.out.println("Exception thrown when trying to save network!");
+            }
+    }
+    
+    public void load(File file)
+    {
+        try{
+            FileInputStream fis = new FileInputStream(file);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            this.network = (NEATNetwork) ois.readObject();
+            fis.close();
+            ois.close();
+            System.out.println("AI LOADED SUCCESSFULLY!");
+        }
+        catch(IOException | ClassNotFoundException e)
+        {
+            System.out.println("File not found");
+        }
     }
 
     public MLDataSet getTrainSet() {
