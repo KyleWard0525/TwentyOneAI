@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import twentyoneai.game.Card;
 import twentyoneai.game.GameEngine;
 
@@ -45,7 +46,6 @@ public class GameWindow extends javax.swing.JFrame {
 
         btnHit = new javax.swing.JButton();
         btnStand = new javax.swing.JButton();
-        btnSplit = new javax.swing.JButton();
         GamePanel = new javax.swing.JPanel();
         btnNewGame = new javax.swing.JButton();
         lblPlayerScore = new javax.swing.JLabel();
@@ -60,6 +60,7 @@ public class GameWindow extends javax.swing.JFrame {
         btnBet = new javax.swing.JButton();
         lblWinner = new javax.swing.JLabel();
         btnToggleAI = new javax.swing.JToggleButton();
+        btnDoubleDown = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("21");
@@ -79,15 +80,6 @@ public class GameWindow extends javax.swing.JFrame {
         btnStand.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnStandActionPerformed(evt);
-            }
-        });
-
-        btnSplit.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        btnSplit.setText("Split");
-        btnSplit.setEnabled(false);
-        btnSplit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSplitActionPerformed(evt);
             }
         });
 
@@ -160,6 +152,14 @@ public class GameWindow extends javax.swing.JFrame {
             }
         });
 
+        btnDoubleDown.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnDoubleDown.setText("Double Down");
+        btnDoubleDown.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDoubleDownActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -179,7 +179,7 @@ public class GameWindow extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblPlayerScore)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                         .addComponent(txtBetAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(73, 73, 73))
                     .addGroup(layout.createSequentialGroup()
@@ -187,12 +187,11 @@ public class GameWindow extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnBet, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(119, 119, 119)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSplit, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblRCountLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblRunningCount)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnDoubleDown, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblRCountLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblRunningCount)
                 .addGap(100, 100, 100)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -237,10 +236,10 @@ public class GameWindow extends javax.swing.JFrame {
                 .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnHit)
-                    .addComponent(btnSplit)
                     .addComponent(btnNewGame)
                     .addComponent(btnStand)
-                    .addComponent(btnBet))
+                    .addComponent(btnBet)
+                    .addComponent(btnDoubleDown))
                 .addGap(10, 10, 10))
         );
 
@@ -257,7 +256,6 @@ public class GameWindow extends javax.swing.JFrame {
         engine.player.setStand(true);
         btnHit.setEnabled(false);
         btnStand.setEnabled(false);
-        btnSplit.setEnabled(false);
         engine.dealerPlay();
         engine.drawScores();
         engine.handleGameOver();
@@ -276,6 +274,7 @@ public class GameWindow extends javax.swing.JFrame {
         lblWinner.setText("");
         btnHit.setEnabled(true);
         btnStand.setEnabled(true);
+        btnDoubleDown.setEnabled(true);
         btnNewGame.setEnabled(false);
         clearConsole();
         
@@ -289,11 +288,6 @@ public class GameWindow extends javax.swing.JFrame {
         
         engine.deal();
     }//GEN-LAST:event_btnNewGameActionPerformed
-
-    private void btnSplitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSplitActionPerformed
-        // TODO handle split function and draw split hands
-        engine.player.split();
-    }//GEN-LAST:event_btnSplitActionPerformed
 
     private void btnBetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBetActionPerformed
         double bet = Double.valueOf(txtBetAmount.getText());
@@ -316,7 +310,7 @@ public class GameWindow extends javax.swing.JFrame {
             btnHit.setEnabled(true);
             btnNewGame.setEnabled(true);
             btnStand.setEnabled(true);
-            
+            btnDoubleDown.setEnabled(true);
             txtBetAmount.setEnabled(false);
         }
         
@@ -331,6 +325,10 @@ public class GameWindow extends javax.swing.JFrame {
             AIplayer = false;
         }
     }//GEN-LAST:event_btnToggleAIActionPerformed
+
+    private void btnDoubleDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDoubleDownActionPerformed
+        engine.doubleDown();
+    }//GEN-LAST:event_btnDoubleDownActionPerformed
 
     public void clearConsole()
     {
@@ -415,9 +413,6 @@ public class GameWindow extends javax.swing.JFrame {
         return lblTrueCount;
     }
 
-    public JButton getBtnSplit() {
-        return btnSplit;
-    }
 
     public JLabel getLblBalance() {
         return lblBalance;
@@ -430,15 +425,25 @@ public class GameWindow extends javax.swing.JFrame {
     public JTextField getTxtBetAmount() {
         return txtBetAmount;
     }
+
+    public JToggleButton getBtnToggleAI() {
+        return btnToggleAI;
+    }
+
+    public JButton getBtnDoubleDown() {
+        return btnDoubleDown;
+    }
+
+
     
     
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel GamePanel;
     private javax.swing.JButton btnBet;
+    private javax.swing.JButton btnDoubleDown;
     private javax.swing.JButton btnHit;
     private javax.swing.JButton btnNewGame;
-    private javax.swing.JButton btnSplit;
     private javax.swing.JButton btnStand;
     private javax.swing.JToggleButton btnToggleAI;
     private javax.swing.JLabel lblBalance;
