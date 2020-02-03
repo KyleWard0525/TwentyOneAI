@@ -43,6 +43,8 @@ public class DataFrame extends javax.swing.JFrame {
         lblTotalError = new javax.swing.JLabel();
         lblWinningsLabel = new javax.swing.JLabel();
         lblWinnings = new javax.swing.JLabel();
+        lblWinPredictionLabel = new javax.swing.JLabel();
+        lblWinPrediction = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Training Data");
@@ -89,6 +91,12 @@ public class DataFrame extends javax.swing.JFrame {
         lblWinnings.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lblWinnings.setText("0");
 
+        lblWinPredictionLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblWinPredictionLabel.setText("AI's win prediction: ");
+
+        lblWinPrediction.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblWinPrediction.setText("0");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -96,6 +104,10 @@ public class DataFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblWinPredictionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblWinPrediction))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblWinningsLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -157,7 +169,11 @@ public class DataFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblWinningsLabel)
                     .addComponent(lblWinnings))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblWinPredictionLabel)
+                    .addComponent(lblWinPrediction))
+                .addGap(30, 30, 30))
         );
 
         pack();
@@ -229,6 +245,11 @@ public class DataFrame extends javax.swing.JFrame {
     public JLabel getLblWinnings() {
         return lblWinnings;
     }
+
+    public JLabel getLblWinPrediction() {
+        return lblWinPrediction;
+    }
+    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -244,6 +265,8 @@ public class DataFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lblTotalGamesLabel;
     private javax.swing.JLabel lblWinPerc;
     private javax.swing.JLabel lblWinPercLabel;
+    private javax.swing.JLabel lblWinPrediction;
+    private javax.swing.JLabel lblWinPredictionLabel;
     private javax.swing.JLabel lblWinnings;
     private javax.swing.JLabel lblWinningsLabel;
     // End of variables declaration//GEN-END:variables
